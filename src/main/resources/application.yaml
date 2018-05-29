@@ -27,9 +27,9 @@ logging:
 spring:
     profiles: local
 
-gorg:
-    username: gorg
-    password: gorg
+gillis:
+    username: gillis
+    password: gillis
 
 logging:
     pattern:
