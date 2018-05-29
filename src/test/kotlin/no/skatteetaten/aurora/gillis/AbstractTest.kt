@@ -1,4 +1,4 @@
-package no.skatteetaten.aurora.gorg
+package no.skatteetaten.aurora.gillis
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

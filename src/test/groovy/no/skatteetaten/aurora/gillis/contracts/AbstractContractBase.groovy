@@ -1,4 +1,4 @@
-package no.skatteetaten.aurora.gorg.contracts
+package no.skatteetaten.aurora.gillis.contracts
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.test.web.servlet.setup.MockMvcBuilders

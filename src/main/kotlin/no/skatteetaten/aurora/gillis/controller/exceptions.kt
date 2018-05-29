@@ -1,3 +1,3 @@
-package no.skatteetaten.aurora.gorg.controller
+package no.skatteetaten.aurora.gillis.controller
 
 class NoSuchResourceException(message: String) : RuntimeException(message)

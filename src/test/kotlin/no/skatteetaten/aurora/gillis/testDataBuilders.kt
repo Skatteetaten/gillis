@@ -1,4 +1,4 @@
-package no.skatteetaten.aurora.gorg
+package no.skatteetaten.aurora.gillis
 
 import com.fkorotkov.kubernetes.newObjectMeta
 import com.fkorotkov.openshift.metadata
@@ -7,7 +7,7 @@ import com.fkorotkov.openshift.newProject
 import com.fkorotkov.openshift.status
 import io.fabric8.openshift.api.model.DeploymentConfig
 import io.fabric8.openshift.api.model.Project
-import no.skatteetaten.aurora.gorg.service.CrawlService
+import no.skatteetaten.aurora.gillis.service.CrawlService
 import java.time.Duration
 import java.time.Instant
 
@@ -46,20 +46,4 @@ data class ProjectDataBuilder(
             }
 }
 
-data class TemporaryProjectDataBuilder(
-        val name: String = "name",
-        val affiliation: String = "affiliation") {
 
-    fun build(): CrawlService.TemporaryProject =
-            CrawlService.TemporaryProject(name = name,
-                    affiliation = affiliation,
-                    ttl = Duration.ZERO,
-                    removalTime = Instant.now())
-}
-
-data class TemporaryApplicationDataBuilder(val name: String = "name",
-                                           val namespace: String = "namespace") {
-
-    fun build(): CrawlService.TemporaryApplication =
-            CrawlService.TemporaryApplication(name = name, namespace = namespace, ttl = Duration.ZERO, removalTime = Instant.now())
-}

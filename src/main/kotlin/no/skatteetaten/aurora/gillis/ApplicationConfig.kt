@@ -1,4 +1,4 @@
-package no.skatteetaten.aurora.gorg
+package no.skatteetaten.aurora.gillis
 
 import io.fabric8.openshift.client.DefaultOpenShiftClient
 import io.fabric8.openshift.client.OpenShiftClient
@@ -25,7 +25,7 @@ class ApplicationConfig : BeanPostProcessor {
     @Bean
     fun basic(): BasicAuthenticationEntryPoint {
         return BasicAuthenticationEntryPoint().also{
-            it.realmName ="GORG"
+            it.realmName ="GILLIS"
         }
     }
 

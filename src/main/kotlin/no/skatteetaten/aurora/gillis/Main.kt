@@ -1,4 +1,4 @@
-package no.skatteetaten.aurora.gorg
+package no.skatteetaten.aurora.gillis
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication

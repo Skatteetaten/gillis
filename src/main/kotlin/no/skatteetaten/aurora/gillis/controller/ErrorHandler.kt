@@ -1,4 +1,4 @@
-package no.skatteetaten.aurora.gorg.controller;
+package no.skatteetaten.aurora.gillis.controller
 
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus

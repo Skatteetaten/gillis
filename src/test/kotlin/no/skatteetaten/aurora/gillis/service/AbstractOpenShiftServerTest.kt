@@ -1,4 +1,4 @@
-package no.skatteetaten.aurora.gorg.service
+package no.skatteetaten.aurora.gillis.service
 
 import io.fabric8.openshift.client.server.mock.OpenShiftServer
 import org.junit.jupiter.api.AfterEach
