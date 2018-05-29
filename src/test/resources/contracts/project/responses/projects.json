@@ -1,0 +1,20 @@
+[
+  {
+    "name": "name",
+    "affiliation": "affiliation",
+    "ttl": {
+      "seconds": 3600,
+      "nano": 0,
+      "negative": false,
+      "units": [
+        "SECONDS",
+        "NANOS"
+      ],
+      "zero": false
+    },
+    "removalTime": {
+      "nano": 0,
+      "epochSecond": 1526391223
+    }
+  }
+]
