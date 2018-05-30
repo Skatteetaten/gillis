@@ -5,27 +5,33 @@ import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isNotNull
-import no.skatteetaten.aurora.gillis.DeploymentConfigDataBuilder
-import no.skatteetaten.aurora.gillis.ProjectDataBuilder
+import no.skatteetaten.aurora.gillis.SecretDataBuilder
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
 class CrawlServiceTest : AbstractOpenShiftServerTest() {
 
     @Test
-    fun `Find temporary applications`() {
-        val dc = DeploymentConfigDataBuilder().build()
-        openShiftServer.openshiftClient.inNamespace("namespace").deploymentConfigs().create(dc)
+    fun `Find renewable certificates`() {
+        val secret = SecretDataBuilder().build()
+        openShiftServer.openshiftClient.inNamespace("namespace").secrets().create(secret)
         val crawlService = CrawlService(openShiftServer.openshiftClient)
 
-        val applications = crawlService.findTemporaryApplications(Instant.now())
+        val applications = crawlService.findRenewableCertificates(Instant.now())
         assert(applications).hasSize(1)
-        assert(applications[0].name).isEqualTo("name")
-        assert(applications[0].namespace).isEqualTo("namespace")
-        assert(applications[0].ttl.seconds).isGreaterThan(0)
-        assert(applications[0].removalTime).isNotNull()
+        val app=applications[0]
+        assert(app.name).isEqualTo("app-cert")
+        assert(app.namespace).isEqualTo("namespace")
+        assert(app.ttl.seconds).isGreaterThan(0)
+        assert(app.renewTime).isNotNull()
+        assert(app.payload).isNotNull()
+        val payload=app.payload
+        assert(payload.commonName).isEqualTo("no.skatteetaten.aurora.app")
+        assert(payload.namespace).isEqualTo(app.namespace)
+        assert("${payload.name}-cert").isEqualTo(app.name)
+        assert(payload.ttl).isEqualTo("1d")
+        assert(payload.renewBefore).isEqualTo("12h")
+
     }
-
-
 
 }

@@ -12,6 +12,8 @@ aurora:
   starter:
     headerfilter:
       enabled: false
+    token:
+        location: /u01/secrets/app/aurora-token/token
 
 logging:
   level:
@@ -23,11 +25,16 @@ logging:
         catalina: WARN
         velocity: WARN
 
+gillis:
+    boober:
+        url: http://boober
 ---
 spring:
     profiles: local
 
 gillis:
+    boober:
+        url: http://boober-aurora.utv.paas.skead.no
     username: gillis
     password: gillis
 

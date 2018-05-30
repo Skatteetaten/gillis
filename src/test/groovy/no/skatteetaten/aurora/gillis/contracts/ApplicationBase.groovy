@@ -12,17 +12,17 @@ class ApplicationBase extends AbstractContractBase {
   void setup() {
     loadJsonResponses(this)
     def crawlService = Mock(CrawlService) {
-      findTemporaryApplications(_ as Instant) >> [createTemporaryApplication()]
+      findRenewableCertificates(_ as Instant) >> [createTemporaryApplication()]
     }
     def deleteService = Mock(RenewService)
     def controller = new ApplicationController(crawlService, deleteService)
     setupMockMvc(controller)
   }
 
-  CrawlService.TemporaryApplication createTemporaryApplication() {
+  CrawlService.RenewableCertificate createTemporaryApplication() {
     def application = response('$[0]', Map)
     def ttl = Duration.ofSeconds(response('$[0].ttl.seconds', Long))
     def removalTime = Instant.ofEpochSecond(response('$[0].renewalTime.epochSecond', Long))
-    new CrawlService.TemporaryApplication(application.name, application.namespace, ttl, removalTime)
+    new CrawlService.RenewableCertificate(application.name, application.namespace, ttl, removalTime)
   }
 }

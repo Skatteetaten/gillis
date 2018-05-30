@@ -1,35 +1,67 @@
 package no.skatteetaten.aurora.gillis.service
 
 import io.fabric8.openshift.client.OpenShiftClient
+import no.skatteetaten.aurora.gillis.extensions.APP_ANNOTATION
+import no.skatteetaten.aurora.gillis.extensions.COMMON_NAME_ANNOTATION
 import no.skatteetaten.aurora.gillis.extensions.RENEW_AFTER_LABEL
+import no.skatteetaten.aurora.gillis.extensions.RENEW_BEFORE_ANNOTATION
+import no.skatteetaten.aurora.gillis.extensions.TTL_ANNOTATION
+import no.skatteetaten.aurora.gillis.extensions.annotation
 import no.skatteetaten.aurora.gillis.extensions.renewalTime
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.Instant
 
-
 @Service
 class CrawlService(val client: OpenShiftClient) {
 
-    fun findTemporaryApplications(now: Instant): List<TemporaryApplication> {
+    val logger: Logger = LoggerFactory.getLogger(RenewService::class.java)
+
+    fun findRenewableCertificates(now: Instant): List<RenewableCertificate> {
         val secrets = client.secrets()
-                .inAnyNamespace()
-                .withLabel(RENEW_AFTER_LABEL)
-                .list().items
+            .inAnyNamespace()
+            .withLabel(RENEW_AFTER_LABEL)
+            .list().items
 
-        return secrets.map {
-                    val renewalTime = it.renewalTime()
-                    TemporaryApplication(it.metadata.name,
-                            it.metadata.namespace,
-                            Duration.between(now, renewalTime),
-                            renewalTime)
-                }
+        return secrets.mapNotNull {
 
-
+             try {
+                val renewalTime = it.renewalTime()
+                RenewableCertificate(
+                    it.metadata.name,
+                    it.metadata.namespace,
+                    Duration.between(now, renewalTime),
+                    renewalTime,
+                    RenewPayload(
+                        it.annotation(APP_ANNOTATION),
+                        it.metadata.namespace,
+                        it.annotation(TTL_ANNOTATION),
+                        it.annotation(RENEW_BEFORE_ANNOTATION),
+                        it.annotation(COMMON_NAME_ANNOTATION)
+                    )
+                )
+            }catch(e:Exception) {
+               logger.warn("Secret with name=${it.metadata.name} is not valid message=${e.message}")
+                null
+            }
+        }
     }
 
+    data class RenewableCertificate(
+        val name: String,
+        val namespace: String,
+        val ttl: Duration,
+        val renewTime: Instant,
+        val payload: RenewPayload
+    )
 
-    data class TemporaryApplication(val name: String, val namespace: String, val ttl: Duration, val removalTime: Instant)
-
-
+    data class RenewPayload (
+        val name: String,
+        val namespace: String,
+        val ttl: String,
+        val renewBefore: String,
+        val commonName: String
+    )
 }
