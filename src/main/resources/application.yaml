@@ -26,6 +26,8 @@ logging:
         velocity: WARN
 
 gillis:
+    openshift:
+        tokenLocation: /var/run/secrets/kubernetes.io/serviceaccount/token
     boober:
         url: http://boober
 ---

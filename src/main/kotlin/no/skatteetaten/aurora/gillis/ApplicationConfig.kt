@@ -8,7 +8,7 @@ import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory
 import no.skatteetaten.aurora.filter.logging.AuroraHeaderFilter
 import no.skatteetaten.aurora.filter.logging.RequestKorrelasjon
-import no.skatteetaten.aurora.gillis.service.SharedSecretReader
+import no.skatteetaten.aurora.gillis.service.openshift.token.TokenProvider
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.context.annotation.Bean
@@ -22,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
 import org.springframework.web.reactive.function.client.WebClient
 import java.io.File
-import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLException
 
 @Configuration
@@ -47,7 +46,7 @@ class ApplicationConfig : BeanPostProcessor {
 
     @Bean
     @Profile("local")
-    fun sslContext() : SslContext {
+    fun sslContext(): SslContext {
         return SslContextBuilder
             .forClient()
             //TODO kun i local profil ellers les fra fil
@@ -57,7 +56,7 @@ class ApplicationConfig : BeanPostProcessor {
 
     @Bean
     @Profile("openshift")
-    fun openShiftSslContext() : SslContext {
+    fun openShiftSslContext(): SslContext {
         return SslContextBuilder
             .forClient()
             .trustManager(File("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"))
@@ -71,8 +70,8 @@ class ApplicationConfig : BeanPostProcessor {
         @Value("\${gillis.httpclient.connectTimeout:5000}") connectTimeout: Int,
         @Value("\${spring.application.name}") applicationName: String,
         @Value("\${gillis.boober.url}") baseUrl: String,
-        sharedSecretReader: SharedSecretReader,
-        sslContext:SslContext
+        sslContext: SslContext,
+        tokenProvider: TokenProvider
     ): WebClient {
 
         val httpConnector = ReactorClientHttpConnector {
@@ -81,7 +80,7 @@ class ApplicationConfig : BeanPostProcessor {
                 .option(ChannelOption.SO_TIMEOUT, readTimeout)
         }
         return WebClient.builder().clientConnector(httpConnector)
-            .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer aurora-token ${sharedSecretReader.secret}")
+            .defaultHeader("Authorization", "Bearer " + tokenProvider.getToken())
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .defaultHeader(AuroraHeaderFilter.KORRELASJONS_ID, RequestKorrelasjon.getId())
             .defaultHeader("KlientID", applicationName)

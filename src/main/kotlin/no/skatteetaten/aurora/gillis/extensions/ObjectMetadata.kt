@@ -16,7 +16,9 @@ fun HasMetadata.renewalTime(): Instant {
         Instant.ofEpochSecond(it.toLong())
     } ?: throw IllegalStateException("stsRenewAfter is not set or valid timstamp")
 }
-
+fun Secret.label(key:String) : String {
+    return this.metadata.labels[key] ?:  throw IllegalStateException("$key is not set or valid timstamp")
+}
 fun Secret.annotation(key:String) : String {
     return this.metadata.annotations[key] ?:  throw IllegalStateException("$key is not set or valid timstamp")
 }

@@ -61,6 +61,7 @@ dependencies {
       'io.fabric8:openshift-client:3.1.12',
       'com.fkorotkov:kubernetes-dsl:1.0',
       "org.springframework.retry:spring-retry",
+      "com.google.guava:guava:16.0.1",
       'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21.2',
       'org.springframework.boot:spring-boot-starter-security',
       'org.springframework.boot:spring-boot-starter-webflux',

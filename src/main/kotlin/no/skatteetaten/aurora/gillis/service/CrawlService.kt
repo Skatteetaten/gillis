@@ -7,6 +7,7 @@ import no.skatteetaten.aurora.gillis.extensions.RENEW_AFTER_LABEL
 import no.skatteetaten.aurora.gillis.extensions.RENEW_BEFORE_ANNOTATION
 import no.skatteetaten.aurora.gillis.extensions.TTL_ANNOTATION
 import no.skatteetaten.aurora.gillis.extensions.annotation
+import no.skatteetaten.aurora.gillis.extensions.label
 import no.skatteetaten.aurora.gillis.extensions.renewalTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -27,7 +28,7 @@ class CrawlService(val client: OpenShiftClient) {
 
         return secrets.mapNotNull {
 
-             try {
+            try {
                 val renewalTime = it.renewalTime()
                 RenewableCertificate(
                     it.metadata.name,
@@ -35,15 +36,16 @@ class CrawlService(val client: OpenShiftClient) {
                     Duration.between(now, renewalTime),
                     renewalTime,
                     RenewPayload(
-                        it.annotation(APP_ANNOTATION),
-                        it.metadata.namespace,
-                        it.annotation(TTL_ANNOTATION),
-                        it.annotation(RENEW_BEFORE_ANNOTATION),
-                        it.annotation(COMMON_NAME_ANNOTATION)
+                        name = it.annotation(APP_ANNOTATION),
+                        namespace = it.metadata.namespace,
+                        affiliation = it.label("affiliation"),
+                        ttl = it.annotation(TTL_ANNOTATION),
+                        renewBefore = it.annotation(RENEW_BEFORE_ANNOTATION),
+                        commonName = it.annotation(COMMON_NAME_ANNOTATION)
                     )
                 )
-            }catch(e:Exception) {
-               logger.warn("Secret with name=${it.metadata.name} is not valid message=${e.message}")
+            } catch (e: Exception) {
+                logger.warn("Secret with name=${it.metadata.name} is not valid message=${e.message}")
                 null
             }
         }
@@ -57,9 +59,10 @@ class CrawlService(val client: OpenShiftClient) {
         val payload: RenewPayload
     )
 
-    data class RenewPayload (
+    data class RenewPayload(
         val name: String,
         val namespace: String,
+        val affiliation: String,
         val ttl: String,
         val renewBefore: String,
         val commonName: String
