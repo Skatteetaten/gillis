@@ -16,7 +16,7 @@ class RenewService(val client: WebClient) {
 
         //TODO:Handle result
         val res = client.post()
-            .uri("/v1/sts/renew")
+            .uri("/v1/sts")
             .body(BodyInserters.fromObject(it.payload))
             .retrieve()
             .bodyToMono(String::class.java)
