@@ -2,6 +2,7 @@ package no.skatteetaten.aurora.gillis
 
 import io.fabric8.openshift.client.DefaultOpenShiftClient
 import io.fabric8.openshift.client.OpenShiftClient
+import io.netty.channel.ChannelOption
 import no.skatteetaten.aurora.filter.logging.AuroraHeaderFilter
 import no.skatteetaten.aurora.filter.logging.RequestKorrelasjon
 import no.skatteetaten.aurora.gillis.service.openshift.token.TokenProvider
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
@@ -47,6 +49,10 @@ class ApplicationConfig : BeanPostProcessor {
         tokenProvider: TokenProvider
     ): WebClient {
         return WebClient.builder()
+            .clientConnector(ReactorClientHttpConnector {
+                it.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout)
+                it.option(ChannelOption.SO_TIMEOUT, readTimeout)
+            })
             .defaultHeader("Authorization", "Bearer " + tokenProvider.getToken())
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .defaultHeader(AuroraHeaderFilter.KORRELASJONS_ID, RequestKorrelasjon.getId())

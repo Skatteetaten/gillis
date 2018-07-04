@@ -7,8 +7,6 @@ import java.time.Instant
 
 const val RENEW_AFTER_LABEL = "stsRenewAfter"
 const val APP_ANNOTATION = "gillis.skatteetaten.no/app"
-const val TTL_ANNOTATION = "gillis.skatteetaten.no/ttl"
-const val RENEW_BEFORE_ANNOTATION = "gillis.skatteetaten.no/renewBefore"
 const val COMMON_NAME_ANNOTATION = "gillis.skatteetaten.no/commonName"
 
 fun HasMetadata.renewalTime(): Instant {

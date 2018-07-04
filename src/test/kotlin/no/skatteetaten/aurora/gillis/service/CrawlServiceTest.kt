@@ -29,8 +29,6 @@ class CrawlServiceTest : AbstractOpenShiftServerTest() {
         assert(payload.commonName).isEqualTo("no.skatteetaten.aurora.app")
         assert(payload.namespace).isEqualTo(app.namespace)
         assert("${payload.name}-cert").isEqualTo(app.name)
-        assert(payload.ttl).isEqualTo("1d")
-        assert(payload.renewBefore).isEqualTo("12h")
 
     }
 
