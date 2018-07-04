@@ -17,7 +17,7 @@ aurora:
 
 logging:
   level:
-    no.skatteetaten.aurora.gorg: INFO
+    no.skatteetaten.aurora.gillis: INFO
     org:
       hibernate: WARN
       springframework: WARN
