@@ -14,7 +14,6 @@ class RenewService(val client: WebClient) {
 
     fun renew(it: RenewableCertificate) {
 
-        //TODO:Handle result
         val res = client.post()
             .uri("/v1/sts")
             .body(BodyInserters.fromObject(it.payload))

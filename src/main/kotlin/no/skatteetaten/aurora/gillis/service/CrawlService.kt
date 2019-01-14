@@ -1,5 +1,6 @@
 package no.skatteetaten.aurora.gillis.service
 
+import io.fabric8.kubernetes.api.model.OwnerReference
 import io.fabric8.openshift.client.OpenShiftClient
 import no.skatteetaten.aurora.gillis.extensions.APP_ANNOTATION
 import no.skatteetaten.aurora.gillis.extensions.COMMON_NAME_ANNOTATION
@@ -29,16 +30,20 @@ class CrawlService(val client: OpenShiftClient) {
 
             try {
                 val renewalTime = it.renewalTime()
+
+                val ownerRerefence = it.metadata.ownerReferences[0]
+
                 RenewableCertificate(
-                    it.metadata.name,
-                    it.metadata.namespace,
-                    Duration.between(now, renewalTime),
-                    renewalTime,
-                    RenewPayload(
+                    name = it.metadata.name,
+                    namespace = it.metadata.namespace,
+                    ttl = Duration.between(now, renewalTime),
+                    renewTime = renewalTime,
+                    payload = RenewPayload(
                         name = it.annotation(APP_ANNOTATION),
                         namespace = it.metadata.namespace,
                         affiliation = it.label("affiliation"),
-                        commonName = it.annotation(COMMON_NAME_ANNOTATION)
+                        commonName = it.annotation(COMMON_NAME_ANNOTATION),
+                        ownerReference = ownerRerefence
                     )
                 )
             } catch (e: Exception) {
@@ -60,6 +65,7 @@ class CrawlService(val client: OpenShiftClient) {
         val name: String,
         val namespace: String,
         val affiliation: String,
-        val commonName: String
+        val commonName: String,
+        val ownerReference: OwnerReference
     )
 }
