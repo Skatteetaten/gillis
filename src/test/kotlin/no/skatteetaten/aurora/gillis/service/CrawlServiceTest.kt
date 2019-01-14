@@ -19,17 +19,15 @@ class CrawlServiceTest : AbstractOpenShiftServerTest() {
 
         val applications = crawlService.findRenewableCertificates(Instant.now())
         assert(applications).hasSize(1)
-        val app=applications[0]
+        val app = applications[0]
         assert(app.name).isEqualTo("app-cert")
         assert(app.namespace).isEqualTo("namespace")
         assert(app.ttl.seconds).isGreaterThan(0)
         assert(app.renewTime).isNotNull()
         assert(app.payload).isNotNull()
-        val payload=app.payload
+        val payload = app.payload
         assert(payload.commonName).isEqualTo("no.skatteetaten.aurora.app")
         assert(payload.namespace).isEqualTo(app.namespace)
         assert("${payload.name}-cert").isEqualTo(app.name)
-
     }
-
 }
