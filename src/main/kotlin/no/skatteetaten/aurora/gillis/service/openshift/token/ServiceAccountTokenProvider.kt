@@ -1,8 +1,5 @@
 package no.skatteetaten.aurora.gillis.service.openshift.token
 
-import com.google.common.base.Supplier
-import com.google.common.base.Suppliers
-import com.google.common.io.Files
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -23,11 +20,11 @@ import java.io.IOException
 @Profile("openshift")
 class ServiceAccountTokenProvider(
     @Value("\${gillis.openshift.tokenLocation}") val tokenLocation: String
-    ) : TokenProvider {
+) : TokenProvider {
 
     private val logger: Logger = LoggerFactory.getLogger(ServiceAccountTokenProvider::class.java)
 
-    private val tokenSupplier: Supplier<String> = Suppliers.memoize({ readToken() })
+    private val tokenSupplier = { token: String -> readToken() }.memoize()
 
     /**
      * Get the Application Token by using the specified tokenOverride if it is set, or else reads the token from the
@@ -36,13 +33,13 @@ class ServiceAccountTokenProvider(
      *
      * @return
      */
-    override fun getToken() = tokenSupplier.get()
+    override fun getToken() = tokenSupplier("token")
 
     private fun readToken(): String {
 
         logger.info("Reading application token from tokenLocation={}", tokenLocation)
         try {
-            val token: String = Files.toString(File(tokenLocation), Charsets.UTF_8).trimEnd()
+            val token: String = File(tokenLocation).readText(Charsets.UTF_8).trimEnd()
             logger.trace(
                 "Read token with length={}, firstLetter={}, lastLetter={}", token.length,
                 token[0], token[token.length - 1]
@@ -53,3 +50,13 @@ class ServiceAccountTokenProvider(
         }
     }
 }
+
+// replace with arrow? https://github.com/arrow-kt/arrow/blob/master/modules/core/arrow-syntax/src/main/kotlin/arrow/syntax/function/memoization.kt
+class Memoize1<in T, out R>(val f: (T) -> R) : (T) -> R {
+    private val values = mutableMapOf<T, R>()
+    override fun invoke(x: T): R {
+        return values.getOrPut(x) { f(x) }
+    }
+}
+
+fun <T, R> ((T) -> R).memoize(): (T) -> R = Memoize1(this)
