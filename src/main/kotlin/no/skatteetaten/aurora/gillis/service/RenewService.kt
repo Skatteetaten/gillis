@@ -21,9 +21,5 @@ class RenewService(val client: WebClient) {
             .bodyToMono(String::class.java)
             .block()
         logger.info(res)
-
-
     }
 }
-
-
