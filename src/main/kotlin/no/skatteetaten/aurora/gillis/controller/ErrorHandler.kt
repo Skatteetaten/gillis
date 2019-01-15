@@ -7,7 +7,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
+import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+import reactor.core.publisher.Mono
+import reactor.core.publisher.toMono
+import java.time.Duration
 
 @ControllerAdvice
 class ErrorHandler : ResponseEntityExceptionHandler() {
@@ -32,3 +36,32 @@ class ErrorHandler : ResponseEntityExceptionHandler() {
 }
 
 class NoSuchResourceException(message: String) : RuntimeException(message)
+
+class SourceSystemException(
+    message: String,
+    cause: Throwable? = null,
+    val code: String = "",
+    val errorMessage: String = message,
+    val sourceSystem: String? = null
+) : RuntimeException(message, cause)
+
+fun <T> Mono<T>.blockNonNullAndHandleError(duration: Duration = Duration.ofSeconds(30), sourceSystem: String? = null) =
+    this.switchIfEmpty(SourceSystemException("Empty response").toMono())
+        .blockAndHandleError(duration, sourceSystem)!!
+
+fun <T> Mono<T>.blockAndHandleError(duration: Duration = Duration.ofSeconds(30), sourceSystem: String? = null) =
+    this.handleError(sourceSystem)
+        .block(duration)
+
+fun <T> Mono<T>.handleError(sourceSystem: String?) =
+    this.doOnError {
+        if (it is WebClientResponseException) {
+            throw SourceSystemException(
+                message = "Error in response, status:${it.statusCode} message:${it.statusText}",
+                cause = it,
+                sourceSystem = sourceSystem,
+                code = it.statusCode.name
+            )
+        }
+        throw SourceSystemException("Error response", it)
+    }
