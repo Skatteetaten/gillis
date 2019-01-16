@@ -8,10 +8,8 @@ import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 
 data class Response(
-    val success: Boolean = true,
-    val message: String = "OK",
-    val items: List<Any> = emptyList(),
-    val count: Int = items.size
+    val success: Boolean,
+    val message: String
 )
 
 @Service

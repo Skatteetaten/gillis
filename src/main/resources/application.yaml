@@ -36,7 +36,7 @@ spring:
 
 gillis:
     boober:
-        url: http://boober-aurora.utv.paas.skead.no
+        url: http://m89870-boober-aurora.utv.paas.skead.no
     username: gillis
     password: gillis
 
