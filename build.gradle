@@ -41,6 +41,12 @@ configurations.archives.artifacts.removeIf { !it.delegate.archiveTask.enabled }
 
 group = groupId
 
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-contract-dependencies:2.1.0.RC3"
+  }
+}
+
 version "${version}"
 
 def junitJupiterVersion = dependencyManagement.importedProperties['junit-jupiter.version']
@@ -66,6 +72,7 @@ dependencies {
       'io.fabric8:openshift-server-mock:4.1.1',
       'io.mockk:mockk:1.8.9',
       'com.willowtreeapps.assertk:assertk:0.10',
+      'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
   ].each { testCompile(it) { exclude group: 'junit' } }
 
   testImplementation(
