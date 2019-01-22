@@ -12,10 +12,12 @@ aurora:
   starter:
     headerfilter:
       enabled: false
+    token:
+        location: /u01/secrets/app/aurora-token/token
 
 logging:
   level:
-    no.skatteetaten.aurora.gorg: INFO
+    no.skatteetaten.aurora.gillis: INFO
     org:
       hibernate: WARN
       springframework: WARN
@@ -23,13 +25,20 @@ logging:
         catalina: WARN
         velocity: WARN
 
+gillis:
+    openshift:
+        tokenLocation: /var/run/secrets/kubernetes.io/serviceaccount/token
+    boober:
+        url: http://boober
 ---
 spring:
     profiles: local
 
-gorg:
-    username: gorg
-    password: gorg
+gillis:
+    boober:
+        url: http://m89870-boober-aurora.utv.paas.skead.no
+    username: gillis
+    password: gillis
 
 logging:
     pattern:
