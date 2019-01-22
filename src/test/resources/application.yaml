@@ -11,3 +11,20 @@ logging:
   pattern:
     console: "%d [%thread] %-5level %logger:%L %X - %msg %n%rEx{full}"
 
+spring:
+  application:
+    name: gillis
+
+gillis:
+  username: username
+  password: password
+  boober:
+    url: http://localhost:6565
+
+stubrunner:
+    stubs-mode: remote
+    ids: no.skatteetaten.aurora:boober:feature_AOS_2193_sts_cert_automation-SNAPSHOT:stubs:6565
+    repositoryRoot: http://aurora/nexus/service/local/repositories/snapshots/content
+
+# INFO log enable to view the resolved version of the stubs artifact
+logging.level.org.springframework.cloud.contract.stubrunner.AetherStubDownloader: INFO
