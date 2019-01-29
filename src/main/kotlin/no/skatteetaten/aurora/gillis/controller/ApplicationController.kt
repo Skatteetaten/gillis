@@ -26,7 +26,7 @@ class ApplicationController(val crawler: CrawlService, val renewalService: Renew
                 val res = renewalService.renew(it)
                 logger.info(res.message)
             } catch (e: SourceSystemException) {
-                logger.error("Could not renew cert message=${e.message} statusCoe=${e.code}", e)
+                logger.error("Could not renew cert message=${e.message} statusCode=${e.code}", e)
             }
         }
     }

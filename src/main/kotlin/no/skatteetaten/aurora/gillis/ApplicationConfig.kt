@@ -8,6 +8,8 @@ import io.netty.handler.timeout.WriteTimeoutHandler
 import no.skatteetaten.aurora.filter.logging.AuroraHeaderFilter
 import no.skatteetaten.aurora.filter.logging.RequestKorrelasjon
 import no.skatteetaten.aurora.gillis.service.openshift.token.TokenProvider
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.context.annotation.Bean
@@ -25,6 +27,8 @@ import javax.net.ssl.SSLException
 
 @Configuration
 class ApplicationConfig : BeanPostProcessor {
+
+    val logger: Logger = LoggerFactory.getLogger(ApplicationConfig::class.java)
 
     @Bean
     fun client(): OpenShiftClient {
@@ -63,9 +67,11 @@ class ApplicationConfig : BeanPostProcessor {
         @Value("\${spring.application.name}") applicationName: String,
         @Value("\${gillis.boober.url}") baseUrl: String,
         tokenProvider: TokenProvider,
-        tcpClient: TcpClient
+        tcpClient: TcpClient,
+        builder: WebClient.Builder
     ): WebClient {
-        return WebClient.builder()
+        logger.info("Created webclient for base url=${baseUrl}")
+        return builder
             .clientConnector(ReactorClientHttpConnector(HttpClient.from(tcpClient)))
             .defaultHeader("Authorization", "Bearer " + tokenProvider.getToken())
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
