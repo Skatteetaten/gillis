@@ -70,7 +70,7 @@ class ApplicationConfig : BeanPostProcessor {
         tcpClient: TcpClient,
         builder: WebClient.Builder
     ): WebClient {
-        logger.info("Created webclient for base url=${baseUrl}")
+        logger.info("Created webclient for base url=$baseUrl")
         return builder
             .clientConnector(ReactorClientHttpConnector(HttpClient.from(tcpClient)))
             .defaultHeader("Authorization", "Bearer " + tokenProvider.getToken())
