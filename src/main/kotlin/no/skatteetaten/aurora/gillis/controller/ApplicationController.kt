@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
 @RestController
-@RequestMapping("/api/apps")
+@RequestMapping("/api/certificate")
 class ApplicationController(val crawler: CrawlService, val renewalService: RenewService) {
 
     val logger: Logger = LoggerFactory.getLogger(ApplicationController::class.java)
 
-    @PostMapping
+    @PostMapping("/renew")
     fun renewExpiredCertificates() {
         val certs = crawler.findRenewableCertificates(Instant.now())
         val certsToRenew = certs.filter { it.ttl.isNegative }
