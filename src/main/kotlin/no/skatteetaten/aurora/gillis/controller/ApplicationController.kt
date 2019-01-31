@@ -20,8 +20,8 @@ class ApplicationController(val crawler: CrawlService, val renewalService: Renew
     @PostMapping("/renew")
     fun renewExpiredCertificates() {
         val certs = crawler.findRenewableCertificates(Instant.now())
-        val certsToRenew = certs.filter { it.ttl.isNegative }
-        certsToRenew.forEach {
+        //val certsToRenew = certs.filter { it.ttl.isNegative }
+        certs.forEach {
             try {
                 val res = renewalService.renew(it)
                 logger.info(res.message)
