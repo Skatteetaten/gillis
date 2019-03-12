@@ -65,7 +65,7 @@ class ApplicationConfig : BeanPostProcessor {
     @Throws(SSLException::class)
     fun createWebClient(
         @Value("\${spring.application.name}") applicationName: String,
-        @Value("\${gillis.boober.url}") baseUrl: String,
+        @Value("\${integrations.boober.url}") baseUrl: String,
         tokenProvider: TokenProvider,
         tcpClient: TcpClient,
         builder: WebClient.Builder

@@ -18,6 +18,8 @@ spring:
 gillis:
   username: username
   password: password
+
+integrations:
   boober:
     url: http://localhost:6565
 

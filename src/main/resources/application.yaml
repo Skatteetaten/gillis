@@ -28,7 +28,9 @@ logging:
 gillis:
     openshift:
         tokenLocation: /var/run/secrets/kubernetes.io/serviceaccount/token
-    boober:
+
+integrations:
+  boober:
         url: http://boober
 ---
 spring:
