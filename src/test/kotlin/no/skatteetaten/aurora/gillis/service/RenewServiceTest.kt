@@ -1,6 +1,5 @@
 package no.skatteetaten.aurora.gillis.service
 
-import assertk.assert
 import assertk.assertThat
 import assertk.assertions.isTrue
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
