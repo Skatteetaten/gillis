@@ -1,6 +1,6 @@
 package no.skatteetaten.aurora.gillis.service
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isTrue
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
 import no.skatteetaten.aurora.gillis.service.openshift.token.TokenProvider
@@ -24,7 +24,7 @@ class RenewServiceTest {
     @Test
     fun `Renew certificate`() {
         val response = renewService.renew(RenewableCertificateBuilder().build())
-        assert(response.success).isTrue()
-        assert(response.message.isNotEmpty()).isTrue()
+        assertThat(response.success).isTrue()
+        assertThat(response.message.isNotEmpty()).isTrue()
     }
 }
