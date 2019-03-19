@@ -8,46 +8,37 @@ spring:
     profiles:
         active: local
 
-aurora:
-  starter:
-    headerfilter:
-      enabled: false
-    token:
-        location: /u01/secrets/app/aurora-token/token
-
 logging:
-  level:
-    no.skatteetaten.aurora.gillis: INFO
-    org:
-      hibernate: WARN
-      springframework: WARN
-      apache:
-        catalina: WARN
-        velocity: WARN
+    level:
+        no.skatteetaten.aurora.gillis: INFO
+        org:
+            hibernate: WARN
+            springframework: WARN
+            apache:
+                catalina: WARN
+                velocity: WARN
 
 gillis:
     openshift:
         tokenLocation: /var/run/secrets/kubernetes.io/serviceaccount/token
 
 integrations:
-  boober:
+    boober:
         url: http://boober
 ---
 spring:
     profiles: local
 
 gillis:
-    boober:
-        url: http://m89870-boober.aurora.utv.paas.skead.no
     username: gillis
     password: gillis
 
 logging:
     pattern:
-      console: "%d [%-9.9thread] %highlight(%-5level) %cyan(%logger:%L) %X - %msg %n%rEx{full}"
+        console: "%d [%-9.9thread] %highlight(%-5level) %cyan(%logger:%L) %X - %msg %n%rEx{full}"
     # add mokey.openshift.token to ~/.spring-boot-devtools.properties
 
 
 ---
 spring:
-  profiles: openshift
+    profiles: openshift
