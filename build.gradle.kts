@@ -1,11 +1,3 @@
-buildscript {
-    dependencies {
-        // must specify this in gradle.properties since the same version must be here and in aurora plugin
-        val springCloudContractVersion: String = project.property("aurora.springCloudContractVersion") as String
-        classpath("org.springframework.cloud:spring-cloud-contract-gradle-plugin:$springCloudContractVersion")
-    }
-}
-
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.3.21"
     id("org.jetbrains.kotlin.plugin.spring") version "1.3.21"
@@ -21,9 +13,8 @@ plugins {
     id("no.skatteetaten.gradle.aurora") version "2.2.0"
 }
 
-apply(plugin = "spring-cloud-contract")
-
 dependencies {
+    val springCloudContractVersion: String = project.property("aurora.springCloudContractVersion") as String
     implementation("io.fabric8:openshift-client:4.1.3")
     testImplementation("com.fkorotkov:kubernetes-dsl:2.0.1")
     testImplementation("com.squareup.okhttp3:mockwebserver:3.14.0")
@@ -33,8 +24,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:$springCloudContractVersion")
 
     testImplementation("io.mockk:mockk:1.9.2")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.13")
     testImplementation("com.nhaarman:mockito-kotlin:1.6.0")
+    testImplementation("no.skatteetaten.aurora:mockmvc-extensions-kotlin:0.6.2")
 }
