@@ -5,13 +5,13 @@ import no.skatteetaten.aurora.gillis.service.CrawlService
 import java.time.Duration
 import java.time.Instant
 
-class RenewableCertificateBuilder {
+data class RenewableCertificateBuilder(val ttl: Duration = Duration.ofSeconds(30)) {
 
     fun build() =
         CrawlService.RenewableCertificate(
             name = "name",
             namespace = "namespace",
-            ttl = Duration.ofSeconds(30),
+            ttl = ttl,
             renewTime = Instant.now(),
             payload = CrawlService.RenewPayload(
                 name = "name",
