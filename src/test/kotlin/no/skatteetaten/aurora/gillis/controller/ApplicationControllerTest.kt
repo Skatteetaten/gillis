@@ -13,7 +13,6 @@ import no.skatteetaten.aurora.mockmvc.extensions.responseJsonPath
 import no.skatteetaten.aurora.mockmvc.extensions.statusIsOk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -28,10 +27,10 @@ import java.time.Duration
 @WebMvcTest(value = [ApplicationController::class])
 class ApplicationControllerTest {
 
-    @MockkBean
+    @MockkBean(relaxed = true)
     private lateinit var passwordEncoder: PasswordEncoder
 
-    @MockkBean
+    @MockkBean(relaxed = true)
     private lateinit var endpoint: BasicAuthenticationEntryPoint
 
     @Autowired
