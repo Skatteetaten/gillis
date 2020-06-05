@@ -33,6 +33,7 @@ class CrawlServiceTest : AbstractOpenShiftServerTest() {
             assertThat(app.renewTime).isNotNull()
             assertThat(app.payload).isNotNull()
             assertThat(payload.commonName).isEqualTo("no.skatteetaten.aurora.app")
+            assertThat(payload.suffix).isEqualTo("cert")
             assertThat(payload.namespace).isEqualTo(app.namespace)
             assertThat("${payload.name}-cert").isEqualTo(app.name)
         }

@@ -18,7 +18,8 @@ data class RenewableCertificateBuilder(val ttl: Duration = Duration.ofSeconds(30
                 namespace = "namespace",
                 affiliation = "affiliation",
                 commonName = "commonName",
-                ownerReference = OwnerReference()
+                ownerReference = OwnerReference(),
+                suffix = "cert"
             )
         )
 }
