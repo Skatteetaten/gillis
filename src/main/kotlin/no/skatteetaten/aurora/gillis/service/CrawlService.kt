@@ -43,7 +43,8 @@ class CrawlService(val client: OpenShiftClient) {
                         namespace = it.metadata.namespace,
                         affiliation = it.label("affiliation"),
                         commonName = it.annotation(COMMON_NAME_ANNOTATION),
-                        ownerReference = ownerRerefence
+                        ownerReference = ownerRerefence,
+                        suffix = it.metadata.name.split("-").last()
                     )
                 )
             } catch (e: Exception) {
@@ -66,6 +67,7 @@ class CrawlService(val client: OpenShiftClient) {
         val namespace: String,
         val affiliation: String,
         val commonName: String,
-        val ownerReference: OwnerReference
+        val ownerReference: OwnerReference,
+        val suffix: String
     )
 }

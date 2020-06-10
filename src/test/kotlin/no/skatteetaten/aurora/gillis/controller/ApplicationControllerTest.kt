@@ -1,8 +1,7 @@
 package no.skatteetaten.aurora.gillis.controller
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.then
-import com.nhaarman.mockito_kotlin.times
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
 import no.skatteetaten.aurora.gillis.service.CrawlService
 import no.skatteetaten.aurora.gillis.service.RenewService
@@ -14,40 +13,50 @@ import no.skatteetaten.aurora.mockmvc.extensions.responseJsonPath
 import no.skatteetaten.aurora.mockmvc.extensions.statusIsOk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
 import org.springframework.test.web.servlet.MockMvc
 import java.time.Duration
 
+@WithMockUser
 @AutoConfigureRestDocs
-@WebMvcTest(controllers = [ApplicationController::class], secure = false)
-@ExtendWith(SpringExtension::class)
-class ApplicationControllerTest(@Autowired val mockMvc: MockMvc) {
+@WebMvcTest(value = [ApplicationController::class])
+class ApplicationControllerTest {
 
-    @MockBean
+    @MockkBean(relaxed = true)
+    private lateinit var passwordEncoder: PasswordEncoder
+
+    @MockkBean(relaxed = true)
+    private lateinit var endpoint: BasicAuthenticationEntryPoint
+
+    @Autowired
+    lateinit var mockMvc: MockMvc
+
+    @MockkBean
     private lateinit var crawlService: CrawlService
 
-    @MockBean
+    @MockkBean
     private lateinit var renewService: RenewService
 
     @BeforeEach
     fun setUp() {
         val certificate = RenewableCertificateBuilder(ttl = Duration.ofSeconds(-10)).build()
-        given(crawlService.findRenewableCertificates(any())).willReturn(listOf(certificate))
+        every { crawlService.findRenewableCertificates(any()) } returns listOf(certificate)
     }
 
     @Test
     fun `Renew expired certificates`() {
-        given(renewService.renew(any())).willReturn(Response(success = true, message = "success"))
+        every {
+            renewService.renew(any())
+        } returns Response(success = true, message = "success")
+
         mockMvc.post(Path("/api/certificate/renew")) {
             statusIsOk()
         }
-        then(renewService).should(times(1)).renew(any())
     }
 
     @Test
