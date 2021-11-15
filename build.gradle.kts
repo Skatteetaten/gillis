@@ -28,6 +28,4 @@ dependencies {
     testImplementation("no.skatteetaten.aurora:mockwebserver-extensions-kotlin:1.2.0")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
 }
-repositories {
-    mavenCentral()
-}
+
