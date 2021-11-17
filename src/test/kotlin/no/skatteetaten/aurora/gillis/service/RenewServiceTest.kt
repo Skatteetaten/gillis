@@ -2,6 +2,7 @@ package no.skatteetaten.aurora.gillis.service
 
 import assertk.assertThat
 import assertk.assertions.isTrue
+import mu.KotlinLogging
 import no.skatteetaten.aurora.gillis.ApplicationConfig
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
 import no.skatteetaten.aurora.gillis.StubrunnerRepoPropertiesEnabler
@@ -21,6 +22,7 @@ import org.springframework.test.annotation.DirtiesContext
 )
 @AutoConfigureStubRunner(ids = ["no.skatteetaten.aurora:boober:+:stubs:6565"])
 class RenewServiceTest : StubrunnerRepoPropertiesEnabler() {
+    private val logger = KotlinLogging.logger {}
 
     @Autowired
     private lateinit var renewService: RenewService
@@ -32,6 +34,7 @@ class RenewServiceTest : StubrunnerRepoPropertiesEnabler() {
     @Test
     fun `Renew certificate`() {
         val response = renewService.renew(RenewableCertificateBuilder().build())
+        logger.info(response.message)
         assertThat(response.success).isTrue()
         assertThat(response.message.isNotEmpty()).isTrue()
     }
