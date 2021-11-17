@@ -2,16 +2,23 @@ package no.skatteetaten.aurora.gillis.service
 
 import assertk.assertThat
 import assertk.assertions.isTrue
+import no.skatteetaten.aurora.gillis.ApplicationConfig
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
 import no.skatteetaten.aurora.gillis.StubrunnerRepoPropertiesEnabler
+import no.skatteetaten.aurora.gillis.TestConfig
 import no.skatteetaten.aurora.gillis.service.openshift.token.TokenProvider
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner
+import org.springframework.test.annotation.DirtiesContext
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@DirtiesContext
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.NONE,
+    classes = [TestConfig::class, ApplicationConfig::class, RenewService::class]
+)
 @AutoConfigureStubRunner(ids = ["no.skatteetaten.aurora:boober:+:stubs:6565"])
 class RenewServiceTest : StubrunnerRepoPropertiesEnabler() {
 
