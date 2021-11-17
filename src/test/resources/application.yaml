@@ -28,9 +28,7 @@ integrations:
     url: http://localhost:6565
 
 stubrunner:
-    stubs-mode: remote
-    ids: no.skatteetaten.aurora:boober:+:stubs:6565
-    repositoryRoot: http://aurora/nexus/service/local/repositories/releases/content
+  stubs-mode: remote
 
 # INFO log enable to view the resolved version of the stubs artifact
 logging.level.org.springframework.cloud.contract.stubrunner.AetherStubDownloader: INFO

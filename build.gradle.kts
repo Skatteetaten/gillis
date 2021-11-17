@@ -1,15 +1,12 @@
 plugins {
     id("java")
-    id("no.skatteetaten.gradle.aurora") version "4.3.22"
+    id("no.skatteetaten.gradle.aurora") version "4.3.24"
 }
 
 aurora {
     useKotlinDefaults
     useSpringBootDefaults
     useAsciiDoctor
-    useSpringBoot {
-        useCloudContract
-    }
 }
 
 dependencies {
@@ -27,5 +24,5 @@ dependencies {
     testImplementation("no.skatteetaten.aurora:mockmvc-extensions-kotlin:1.1.7")
     testImplementation("no.skatteetaten.aurora:mockwebserver-extensions-kotlin:1.2.0")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
+    testImplementation("org.junit-pioneer:junit-pioneer:1.4.2")
 }
-
