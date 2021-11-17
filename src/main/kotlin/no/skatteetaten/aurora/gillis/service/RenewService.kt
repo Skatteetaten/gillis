@@ -19,7 +19,7 @@ class RenewService(val client: WebClient) {
 
         val res = client.post()
             .uri("/v1/sts")
-            .body(BodyInserters.fromObject(it.payload))
+            .body(BodyInserters.fromValue(it.payload))
             .retrieve()
             .bodyToMono(Response::class.java)
             .blockNonNullAndHandleError(sourceSystem = "boober")
