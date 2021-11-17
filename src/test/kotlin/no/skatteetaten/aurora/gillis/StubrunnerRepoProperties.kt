@@ -18,6 +18,8 @@ const val stubrunnerRepoUrl = "stubrunner.repositoryRoot"
 
 abstract class StubrunnerRepoPropertiesEnabler {
 
+    // Spring cloud sleuth does not clean up its hooks when the spring context shuts down
+    // https://github.com/spring-cloud/spring-cloud-sleuth/issues/1712
     @BeforeEach
     fun setUp() {
         Hooks.resetOnEachOperator()
