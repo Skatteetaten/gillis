@@ -11,7 +11,8 @@ def overrides = [
     chatRoom: "#aos-notifications",
     versionStrategy: [
       [ branch: 'master', versionHint: '1' ]
-    ]
+    ],
+    compileGoal: "build --info"
 ]
 
 fileLoader.withGit(overrides.pipelineScript,, overrides.scriptVersion) {

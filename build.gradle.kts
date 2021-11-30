@@ -15,7 +15,7 @@ aurora {
 dependencies {
     implementation("io.fabric8:openshift-client:5.10.1")
     implementation("no.skatteetaten.aurora.springboot:aurora-spring-security-starter:1.6.2")
-    testImplementation("com.fkorotkov:kubernetes-dsl:2.8")
+    testImplementation("com.fkorotkov:kubernetes-dsl:2.8.1")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")
