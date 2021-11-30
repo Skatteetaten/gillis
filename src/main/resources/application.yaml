@@ -12,6 +12,15 @@ logging:
                 catalina: WARN
                 velocity: WARN
 
+aurora:
+    webflux:
+        header:
+            filter:
+                enabled: true
+            webclient:
+                interceptor:
+                    enabled: true
+
 gillis:
     openshift:
         tokenLocation: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -35,4 +44,5 @@ logging:
 
 ---
 spring:
-    profiles: openshift
+    profiles:
+        active: openshift
