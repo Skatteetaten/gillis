@@ -38,7 +38,7 @@ integrations:
 
 stubrunner:
     stubs-mode: remote
-    ids: no.skatteetaten.aurora:boober:+:stubs:6565
+    ids: no.skatteetaten.aurora:boober:test_prev_stubs-SNAPSHOT:stubs:6565
 
 # INFO log enable to view the resolved version of the stubs artifact
 logging.level.org.springframework.cloud.contract.stubrunner.AetherStubDownloader: INFO
