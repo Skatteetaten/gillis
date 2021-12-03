@@ -12,7 +12,7 @@ def overrides = [
     versionStrategy: [
       [ branch: 'master', versionHint: '1' ]
     ],
-    compileGoal: "build --info"
+    compileGoal: "clean build --info"
 ]
 
 fileLoader.withGit(overrides.pipelineScript,, overrides.scriptVersion) {
