@@ -2,6 +2,7 @@ package no.skatteetaten.aurora.gillis.service
 
 import assertk.assertThat
 import assertk.assertions.isTrue
+import kotlinx.coroutines.runBlocking
 import no.skatteetaten.aurora.gillis.ApplicationConfig
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
 import no.skatteetaten.aurora.gillis.StubrunnerRepoPropertiesEnabler
@@ -31,7 +32,9 @@ class RenewServiceTest : StubrunnerRepoPropertiesEnabler() {
 
     @Test
     fun `Renew certificate`() {
-        val response = renewService.renew(RenewableCertificateBuilder().build())
+        val response = runBlocking {
+            renewService.renew(RenewableCertificateBuilder().build())
+        }
         assertThat(response.success).isTrue()
         assertThat(response.message.isNotEmpty()).isTrue()
     }
