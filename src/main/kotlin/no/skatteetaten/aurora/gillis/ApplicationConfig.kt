@@ -51,40 +51,6 @@ class ApplicationConfig(
         }
     }
 
-//    @Bean
-//    fun tcpClient(
-//        @Value("\${gillis.httpclient.readTimeout:10000}") readTimeout: Int,
-//        @Value("\${gillis.httpclient.writeTimeout:10000}") writeTimeout: Int,
-//        @Value("\${gillis.httpclient.connectTimeout:5000}") connectTimeout: Int
-//    ): TcpClient {
-//        return TcpClient.create()
-//            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout)
-//            .doOnConnected { connection ->
-//                connection.addHandlerLast(ReadTimeoutHandler(readTimeout))
-//                    .addHandlerLast(WriteTimeoutHandler(writeTimeout))
-//            }
-//    }
-
-//    @Bean
-//    @Throws(SSLException::class)
-//    fun createWebClient(
-//        @Value("\${spring.application.name}") applicationName: String,
-//        @Value("\${integrations.boober.url}") baseUrl: String,
-//        tokenProvider: TokenProvider,
-//        tcpClient: TcpClient,
-//        builder: WebClient.Builder
-//    ): WebClient {
-//        logger.info("Created webclient for base url=$baseUrl")
-//        return builder
-//            .clientConnector(ReactorClientHttpConnector(HttpClient.from(tcpClient)))
-//            .defaultHeader("Authorization", "Bearer " + tokenProvider.getToken())
-//            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-//            .defaultHeader(AuroraRequestParser.KORRELASJONSID_FIELD, RequestKorrelasjon.getId())
-//            .defaultHeader("KlientID", applicationName)
-//            .baseUrl(baseUrl)
-//            .build()
-//    }
-
     @Bean
     fun createWebClient(
         @Value("\${spring.application.name}") applicationName: String,

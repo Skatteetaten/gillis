@@ -1,41 +1,53 @@
 package no.skatteetaten.aurora.gillis.service
 
 import assertk.assertThat
+import assertk.assertions.isNotEmpty
 import assertk.assertions.isTrue
-import kotlinx.coroutines.runBlocking
-import no.skatteetaten.aurora.gillis.ApplicationConfig
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
-import no.skatteetaten.aurora.gillis.StubrunnerRepoPropertiesEnabler
-import no.skatteetaten.aurora.gillis.TestConfig
-import no.skatteetaten.aurora.gillis.service.openshift.token.TokenProvider
+import no.skatteetaten.aurora.mockmvc.extensions.mockwebserver.url
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner
-import org.springframework.test.annotation.DirtiesContext
+import org.springframework.http.MediaType
+import org.springframework.web.reactive.function.client.WebClient
 
-@DirtiesContext
-@SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.NONE,
-    classes = [TestConfig::class, ApplicationConfig::class, RenewService::class]
-)
-@AutoConfigureStubRunner
-class RenewServiceTest : StubrunnerRepoPropertiesEnabler() {
+class RenewServiceTest {
 
-    @Autowired
+    private lateinit var mockWebServer: MockWebServer
+
     private lateinit var renewService: RenewService
 
-    @MockBean
-    @Suppress("unused")
-    private lateinit var tokenProvider: TokenProvider
+    @BeforeAll
+    fun setup() {
+        mockWebServer = MockWebServer()
+        mockWebServer.start()
+
+        val webClient = WebClient.builder()
+            .baseUrl(mockWebServer.url)
+            .build()
+
+        renewService = RenewService(webClient)
+    }
+
+    @AfterAll
+    fun tearDown() {
+        mockWebServer.shutdown()
+    }
 
     @Test
     fun `Renew certificate`() {
-        val response = runBlocking {
-            renewService.renew(RenewableCertificateBuilder().build())
-        }
+        mockWebServer.enqueue(
+            MockResponse()
+                .setBody(jacksonObjectMapper().writeValueAsString(Response(true, "ok")))
+                .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+        )
+
+        val response = renewService.renew(RenewableCertificateBuilder().build())
+
         assertThat(response.success).isTrue()
-        assertThat(response.message.isNotEmpty()).isTrue()
+        assertThat(response.message).isNotEmpty()
     }
 }
