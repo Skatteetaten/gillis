@@ -1,34 +1,42 @@
 package no.skatteetaten.aurora.gillis.controller.security
 
-import no.skatteetaten.aurora.springboot.AuroraSecurityContextRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
-import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
 
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 class WebSecurityConfig(
-    private val authenticationManager: ReactiveAuthenticationManager,
-    private val securityContextRepository: AuroraSecurityContextRepository,
+    @Value("\${gillis.username}") val userName: String,
+    @Value("\${gillis.password}") val password: String,
+    private val passwordEncoder: PasswordEncoder,
     private val authEntryPoint: HttpBasicServerAuthenticationEntryPoint
 ) {
 
     @Bean
-    fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain = http
-        .httpBasic().disable()
-        .formLogin().disable()
-        .csrf().disable()
-        .logout().disable()
-        .authenticationManager(authenticationManager)
-        .securityContextRepository(securityContextRepository)
-        .authorizeExchange().pathMatchers("/docs/index.html", "/", "/actuator", "/actuator/**").permitAll()
-        .pathMatchers("/api/**").hasRole("USER")
-        .and()
-        .httpBasic().authenticationEntryPoint(authEntryPoint)
-        .and()
-        .build()
+    fun userDetailsService(): MapReactiveUserDetailsService {
+        val userDetails = User
+            .withUsername(userName)
+            .password(passwordEncoder.encode(password))
+            .roles("USER")
+            .build()
+        return MapReactiveUserDetailsService(userDetails)
+    }
+
+    @Bean
+    fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
+        http.csrf().disable()
+        http.authorizeExchange()
+            .pathMatchers("/docs/index.html", "/", "/actuator", "/actuator/**").permitAll()
+            .pathMatchers("/api/**").hasRole("USER")
+            .and().httpBasic().authenticationEntryPoint(authEntryPoint)
+        return http.build()
+    }
 }
