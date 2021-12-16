@@ -38,8 +38,9 @@ class WebSecurityConfig(
                 it.pathMatchers("/docs/index.html", "/", "/actuator", "/actuator/**").permitAll()
                 it.pathMatchers("/api/**").hasRole("USER")
             }
-            .httpBasic()
-            .authenticationEntryPoint(authEntryPoint)
+            .httpBasic {
+                it.authenticationEntryPoint(authEntryPoint)
+            }
         return http.build()
     }
 }
