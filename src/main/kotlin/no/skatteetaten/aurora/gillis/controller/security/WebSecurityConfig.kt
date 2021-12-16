@@ -2,7 +2,7 @@ package no.skatteetaten.aurora.gillis.controller.security
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
@@ -11,8 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
 
+@Configuration
 @EnableWebFluxSecurity
-@EnableReactiveMethodSecurity
 class WebSecurityConfig(
     @Value("\${gillis.username}") val userName: String,
     @Value("\${gillis.password}") val password: String,
@@ -32,11 +32,14 @@ class WebSecurityConfig(
 
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        http.csrf().disable()
-        http.authorizeExchange()
-            .pathMatchers("/docs/index.html", "/", "/actuator", "/actuator/**").permitAll()
-            .pathMatchers("/api/**").hasRole("USER")
-            .and().httpBasic().authenticationEntryPoint(authEntryPoint)
+        http
+            .csrf().disable()
+            .authorizeExchange {
+                it.pathMatchers("/docs/index.html", "/", "/actuator", "/actuator/**").permitAll()
+                it.pathMatchers("/api/**").hasRole("USER")
+            }
+            .httpBasic()
+            .authenticationEntryPoint(authEntryPoint)
         return http.build()
     }
 }
