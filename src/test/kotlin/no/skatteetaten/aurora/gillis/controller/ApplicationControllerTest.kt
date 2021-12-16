@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.security.authentication.ReactiveAuthenticationManager
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -23,6 +24,9 @@ import java.time.Duration
 @AutoConfigureRestDocs
 @WebFluxTest(value = [ApplicationController::class, WebSecurityConfig::class])
 class ApplicationControllerTest {
+
+    @MockkBean(relaxed = true)
+    private lateinit var passwordEncoder: PasswordEncoder
 
     @MockkBean(relaxed = true)
     private lateinit var authenticationManager: ReactiveAuthenticationManager
