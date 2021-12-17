@@ -7,7 +7,6 @@ import no.skatteetaten.aurora.gillis.controller.security.WebSecurityConfig
 import no.skatteetaten.aurora.gillis.service.CrawlService
 import no.skatteetaten.aurora.gillis.service.RenewService
 import no.skatteetaten.aurora.gillis.service.Response
-import no.skatteetaten.aurora.springboot.AuroraSecurityContextRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,9 +29,6 @@ class ApplicationControllerTest {
 
     @MockkBean(relaxed = true)
     private lateinit var authenticationManager: ReactiveAuthenticationManager
-
-    @MockkBean(relaxed = true)
-    private lateinit var securityContextRepository: AuroraSecurityContextRepository
 
     @MockkBean(relaxed = true)
     private lateinit var endpoint: HttpBasicServerAuthenticationEntryPoint

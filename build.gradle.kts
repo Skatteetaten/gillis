@@ -14,7 +14,6 @@ aurora {
 
 dependencies {
     implementation("io.fabric8:openshift-client:5.10.1")
-    implementation("no.skatteetaten.aurora.springboot:aurora-spring-security-starter:1.6.2")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.1.5")
     testImplementation("com.github.fkorotkov:k8s-kotlin-dsl:3.0.1")
 
