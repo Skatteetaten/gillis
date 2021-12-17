@@ -17,6 +17,10 @@ dependencies {
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.1.5")
     testImplementation("com.github.fkorotkov:k8s-kotlin-dsl:3.0.1")
 
+    /* explicit okhttp3 dependencies to force transitive */
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.2")
+
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
