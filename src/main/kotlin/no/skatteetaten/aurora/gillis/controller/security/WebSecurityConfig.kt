@@ -1,47 +1,46 @@
 package no.skatteetaten.aurora.gillis.controller.security
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.context.annotation.Bean
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
+import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
+import org.springframework.security.core.userdetails.User
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
-import org.springframework.security.web.util.matcher.RequestMatcher
-import javax.servlet.http.HttpServletRequest
+import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
 
-@Configuration
-@EnableWebSecurity
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 class WebSecurityConfig(
-    @Value("\${management.server.port}") val managementPort: Int,
     @Value("\${gillis.username}") val userName: String,
     @Value("\${gillis.password}") val password: String,
-    val passwordEncoder: PasswordEncoder,
-    val authEntryPoint: BasicAuthenticationEntryPoint
+    private val passwordEncoder: PasswordEncoder,
+    private val authEntryPoint: HttpBasicServerAuthenticationEntryPoint
+) {
 
-) : WebSecurityConfigurerAdapter() {
-
-    @Autowired
-    @Throws(Exception::class)
-    fun configureGlobalSecurity(auth: AuthenticationManagerBuilder) {
-        auth.inMemoryAuthentication().withUser(userName).password(passwordEncoder.encode(password)).roles("USER")
+    @Bean
+    fun userDetailsService(): MapReactiveUserDetailsService {
+        val userDetails = User
+            .withUsername(userName)
+            .password(passwordEncoder.encode(password))
+            .roles("USER")
+            .build()
+        return MapReactiveUserDetailsService(userDetails)
     }
 
-    private fun forPort(port: Int) = RequestMatcher { request: HttpServletRequest -> port == request.localPort }
-
-    override fun configure(http: HttpSecurity) {
-
-        http.csrf().disable().sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // We don't need sessions to be created.
-
-        http.authorizeRequests()
-            .requestMatchers(forPort(managementPort)).permitAll()
-            .antMatchers("/docs/index.html").permitAll()
-            .antMatchers("/").permitAll()
-            .antMatchers("/api/**").hasRole("USER")
-            .and().httpBasic().realmName("GILLIS").authenticationEntryPoint(authEntryPoint)
+    @Bean
+    fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
+        http
+            .csrf().disable()
+            .authorizeExchange {
+                it.pathMatchers("/docs/index.html", "/", "/actuator", "/actuator/**").permitAll()
+                it.pathMatchers("/api/**").hasRole("USER")
+            }
+            .httpBasic {
+                it.authenticationEntryPoint(authEntryPoint)
+            }
+        return http.build()
     }
 }
