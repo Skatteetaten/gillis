@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isTrue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import kotlinx.coroutines.runBlocking
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
 import no.skatteetaten.aurora.mockmvc.extensions.mockwebserver.url
 import okhttp3.mockwebserver.MockResponse
@@ -45,7 +46,9 @@ class RenewServiceTest {
                 .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
         )
 
-        val response = renewService.renew(RenewableCertificateBuilder().build())
+        val response = runBlocking {
+            renewService.renew(RenewableCertificateBuilder().build())
+        }
 
         assertThat(response.success).isTrue()
         assertThat(response.message).isNotEmpty()
