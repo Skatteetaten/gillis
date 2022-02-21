@@ -18,7 +18,7 @@ class ApplicationController(val crawler: CrawlService, val renewalService: Renew
     val logger: Logger = LoggerFactory.getLogger(ApplicationController::class.java)
 
     @PostMapping("/renew")
-    fun renewExpiredCertificates() {
+    suspend fun renewExpiredCertificates() {
         val certs = crawler.findRenewableCertificates(Instant.now())
         val certsToRenew = certs.filter { it.ttl.isNegative }
         certsToRenew.forEach {

@@ -1,6 +1,7 @@
 package no.skatteetaten.aurora.gillis.controller
 
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.coEvery
 import io.mockk.every
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
 import no.skatteetaten.aurora.gillis.controller.security.WebSecurityConfig
@@ -50,7 +51,7 @@ class ApplicationControllerTest {
 
     @Test
     fun `Renew expired certificates`() {
-        every {
+        coEvery {
             renewService.renew(any())
         } returns Response(success = true, message = "success")
 

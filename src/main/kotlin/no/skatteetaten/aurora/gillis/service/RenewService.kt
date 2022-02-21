@@ -15,7 +15,7 @@ data class Response(
 @Service
 class RenewService(val client: WebClient) {
 
-    fun renew(it: RenewableCertificate): Response {
+    suspend fun renew(it: RenewableCertificate): Response {
 
         val res = client.post()
             .uri("/v1/sts")

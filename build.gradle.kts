@@ -13,6 +13,10 @@ aurora {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.6.0")
+
     implementation("io.fabric8:openshift-client:5.10.1")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.1.5")
     testImplementation("com.github.fkorotkov:k8s-kotlin-dsl:3.0.1")
@@ -32,4 +36,6 @@ dependencies {
     }
     testImplementation("com.ninja-squad:springmockk:3.0.1")
     testImplementation("org.junit-pioneer:junit-pioneer:1.5.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+    testImplementation("io.projectreactor:reactor-test")
 }
