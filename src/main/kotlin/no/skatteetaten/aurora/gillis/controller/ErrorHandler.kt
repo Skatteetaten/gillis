@@ -1,9 +1,9 @@
 package no.skatteetaten.aurora.gillis.controller
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
-import java.time.Duration
 
 class SourceSystemException(
     message: String,
@@ -13,23 +13,21 @@ class SourceSystemException(
     val sourceSystem: String? = null
 ) : RuntimeException(message, cause)
 
-fun <T> Mono<T>.blockNonNullAndHandleError(duration: Duration = Duration.ofSeconds(30), sourceSystem: String? = null) =
-    this.switchIfEmpty(SourceSystemException("Empty response").toMono())
-        .blockAndHandleError(duration, sourceSystem)!!
+val logger: Logger = LoggerFactory.getLogger(ApplicationController::class.java)
 
-fun <T> Mono<T>.blockAndHandleError(duration: Duration = Duration.ofSeconds(30), sourceSystem: String? = null) =
-    this.handleError(sourceSystem)
-        .block(duration)
-
-fun <T> Mono<T>.handleError(sourceSystem: String?) =
-    this.doOnError {
+fun <T> Mono<T>.handleError(sourceSystem: String? = null) =
+    this.switchIfEmpty(Mono.error(SourceSystemException("Empty response"))).doOnError {
         if (it is WebClientResponseException) {
-            throw SourceSystemException(
-                message = "Error in response, status:${it.statusCode} message:${it.statusText}",
-                cause = it,
-                sourceSystem = sourceSystem,
-                code = it.statusCode.name
+            logError(
+                SourceSystemException(
+                    message = "Error in response, status:${it.statusCode} message:${it.statusText}",
+                    cause = it,
+                    sourceSystem = sourceSystem,
+                    code = it.statusCode.name
+                )
             )
         }
-        throw SourceSystemException("Error response", it)
+        logError(SourceSystemException("Error response", it))
     }
+
+fun logError(e: SourceSystemException) = logger.error("Could not renew cert message=${e.message} statusCode=${e.code}", e)

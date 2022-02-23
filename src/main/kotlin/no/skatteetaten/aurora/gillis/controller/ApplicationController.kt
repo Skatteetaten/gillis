@@ -18,16 +18,11 @@ class ApplicationController(val crawler: CrawlService, val renewalService: Renew
     val logger: Logger = LoggerFactory.getLogger(ApplicationController::class.java)
 
     @PostMapping("/renew")
-    suspend fun renewExpiredCertificates() {
+    fun renewExpiredCertificates() {
         val certs = crawler.findRenewableCertificates(Instant.now())
         val certsToRenew = certs.filter { it.ttl.isNegative }
         certsToRenew.forEach {
-            try {
-                val res = renewalService.renew(it)
-                logger.info(res.message)
-            } catch (e: SourceSystemException) {
-                logger.error("Could not renew cert message=${e.message} statusCode=${e.code}", e)
-            }
+            renewalService.renew(it)
         }
     }
 

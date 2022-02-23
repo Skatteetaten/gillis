@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
 import org.springframework.test.web.reactive.server.WebTestClient
+import reactor.kotlin.core.publisher.toMono
 import java.time.Duration
 
 @WithMockUser
@@ -53,7 +54,31 @@ class ApplicationControllerTest {
     fun `Renew expired certificates`() {
         coEvery {
             renewService.renew(any())
-        } returns Response(success = true, message = "success")
+        } returns Response(success = true, message = "success").toMono()
+
+        webTestClient
+            .post().uri("/api/certificate/renew")
+            .exchange()
+            .expectStatus().isOk
+    }
+
+    @Test
+    fun `empty response should return 500`() {
+        coEvery {
+            renewService.renew(any())
+        } throws SourceSystemException("Empty response")
+
+        webTestClient
+            .post().uri("/api/certificate/renew")
+            .exchange()
+            .expectStatus().is5xxServerError
+    }
+
+    @Test
+    fun `failed renewing`() {
+        coEvery {
+            renewService.renew(any())
+        } returns Response(success = false, message = "Failed renewing certificate").toMono()
 
         webTestClient
             .post().uri("/api/certificate/renew")
