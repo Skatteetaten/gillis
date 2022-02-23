@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.test.StepVerifier
 
 class RenewServiceTest {
 
@@ -58,9 +59,10 @@ class RenewServiceTest {
                 .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
         )
 
-        renewService.renew(RenewableCertificateBuilder().build()).map {
-            assertThat(it.success).isTrue()
-            assertThat(it.message).isNotEmpty()
-        }
+        val response = renewService.renew(RenewableCertificateBuilder().build())
+        StepVerifier
+            .create(response)
+            .expectErrorMessage("Empty response")
+            .verify()
     }
 }
