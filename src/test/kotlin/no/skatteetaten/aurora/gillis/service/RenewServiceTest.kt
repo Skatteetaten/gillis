@@ -1,8 +1,5 @@
 package no.skatteetaten.aurora.gillis.service
 
-import assertk.assertThat
-import assertk.assertions.isNotEmpty
-import assertk.assertions.isTrue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
 import no.skatteetaten.aurora.mockmvc.extensions.mockwebserver.url
@@ -46,14 +43,16 @@ class RenewServiceTest {
                 .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
         )
 
-        renewService.renew(RenewableCertificateBuilder().build()).map {
-            assertThat(it.success).isTrue()
-            assertThat(it.message).isNotEmpty()
-        }
+        val response = renewService.renew(RenewableCertificateBuilder().build())
+        StepVerifier
+            .create(response)
+            .expectNext(Response(success = true, message = "ok"))
+            .expectComplete()
+            .verify()
     }
 
     @Test
-    fun `empty body`() {
+    fun `Should log error when response has empty body`() {
         mockWebServer.enqueue(
             MockResponse()
                 .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -63,6 +62,22 @@ class RenewServiceTest {
         StepVerifier
             .create(response)
             .expectErrorMessage("Empty response")
+            .verify()
+    }
+
+    @Test
+    fun `Should log error when response has success false`() {
+        mockWebServer.enqueue(
+            MockResponse()
+                .setBody(jacksonObjectMapper().writeValueAsString(Response(false, "Failed renewing certificate")))
+                .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+        )
+
+        val response = renewService.renew(RenewableCertificateBuilder().build())
+        StepVerifier
+            .create(response)
+            .expectNext(Response(false, "Failed renewing certificate"))
+            .expectComplete()
             .verify()
     }
 }

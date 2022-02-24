@@ -63,30 +63,6 @@ class ApplicationControllerTest {
     }
 
     @Test
-    fun `empty response should return 500`() {
-        coEvery {
-            renewService.renew(any())
-        } throws SourceSystemException("Empty response")
-
-        webTestClient
-            .post().uri("/api/certificate/renew")
-            .exchange()
-            .expectStatus().is5xxServerError
-    }
-
-    @Test
-    fun `failed renewing`() {
-        coEvery {
-            renewService.renew(any())
-        } returns Response(success = false, message = "Failed renewing certificate").toMono()
-
-        webTestClient
-            .post().uri("/api/certificate/renew")
-            .exchange()
-            .expectStatus().isOk
-    }
-
-    @Test
     fun `List certificates`() {
         webTestClient.get().uri("/api/certificate")
             .exchange()

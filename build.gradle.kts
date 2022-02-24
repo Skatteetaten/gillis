@@ -19,7 +19,6 @@ dependencies {
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.1.5")
     testImplementation("com.github.fkorotkov:k8s-kotlin-dsl:3.0.1")
     implementation("io.projectreactor:reactor-tools")
-    implementation("io.projectreactor:reactor-test")
 
     /* explicit okhttp3 dependencies to force transitive */
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
@@ -37,4 +36,5 @@ dependencies {
     testImplementation("com.ninja-squad:springmockk:3.0.1")
     testImplementation("org.junit-pioneer:junit-pioneer:1.5.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+    testImplementation("io.projectreactor:reactor-test")
 }

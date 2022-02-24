@@ -5,8 +5,9 @@ import no.skatteetaten.aurora.gillis.service.CrawlService.RenewableCertificate
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import mu.KotlinLogging
+import no.skatteetaten.aurora.gillis.controller.SourceSystemException
+import no.skatteetaten.aurora.gillis.controller.logError
 import reactor.core.publisher.Mono
-import reactor.tools.agent.ReactorDebugAgent
 
 data class Response(
     val success: Boolean,
@@ -14,6 +15,7 @@ data class Response(
 )
 
 private val logger = KotlinLogging.logger { }
+
 @Service
 class RenewService(val client: WebClient) {
     fun renew(renewableCertificate: RenewableCertificate): Mono<Response> {
@@ -24,8 +26,11 @@ class RenewService(val client: WebClient) {
             .bodyToMono(Response::class.java)
             .handleError(sourceSystem = "boober")
             .doOnSuccess {
-                logger.info(it.message)
+                if (!it.success) {
+                    logError(SourceSystemException(message = it.message, code = "200", sourceSystem = "boober"))
+                } else {
+                    logger.info(it.message)
+                }
             }
-            .log()
     }
 }
