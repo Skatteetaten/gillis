@@ -1,5 +1,6 @@
 package no.skatteetaten.aurora.gillis
 
+import java.time.Instant
 import com.fkorotkov.kubernetes.newObjectMeta
 import com.fkorotkov.kubernetes.newOwnerReference
 import com.fkorotkov.kubernetes.newSecret
@@ -7,7 +8,6 @@ import io.fabric8.kubernetes.api.model.Secret
 import no.skatteetaten.aurora.gillis.extensions.APP_ANNOTATION
 import no.skatteetaten.aurora.gillis.extensions.COMMON_NAME_ANNOTATION
 import no.skatteetaten.aurora.gillis.extensions.RENEW_AFTER_LABEL
-import java.time.Instant
 
 data class SecretDataBuilder(
     val secretNamespace: String = "namespace",

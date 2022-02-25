@@ -1,9 +1,9 @@
 package no.skatteetaten.aurora.gillis
 
-import io.fabric8.kubernetes.api.model.OwnerReference
-import no.skatteetaten.aurora.gillis.service.CrawlService
 import java.time.Duration
 import java.time.Instant
+import io.fabric8.kubernetes.api.model.OwnerReference
+import no.skatteetaten.aurora.gillis.service.CrawlService
 
 data class RenewableCertificateBuilder(val ttl: Duration = Duration.ofSeconds(30)) {
 

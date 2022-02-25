@@ -1,5 +1,7 @@
 package no.skatteetaten.aurora.gillis.service
 
+import java.time.Instant
+import org.junit.jupiter.api.Test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
@@ -7,8 +9,6 @@ import assertk.assertions.isNotNull
 import io.fabric8.kubernetes.api.model.SecretList
 import no.skatteetaten.aurora.gillis.SecretDataBuilder
 import no.skatteetaten.aurora.mockmvc.extensions.mockwebserver.execute
-import org.junit.jupiter.api.Test
-import java.time.Instant
 import reactor.test.StepVerifier
 
 class CrawlServiceTest : AbstractOpenShiftServerTest() {

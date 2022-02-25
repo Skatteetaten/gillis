@@ -1,11 +1,11 @@
 package no.skatteetaten.aurora.gillis.service.openshift.token
 
-import org.springframework.context.annotation.Profile
-import org.springframework.stereotype.Component
-import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
+import org.springframework.context.annotation.Profile
+import org.springframework.stereotype.Component
+import org.yaml.snakeyaml.Yaml
 
 @Profile("local")
 @Component

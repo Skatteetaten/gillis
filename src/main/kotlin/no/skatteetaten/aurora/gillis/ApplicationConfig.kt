@@ -1,14 +1,6 @@
 package no.skatteetaten.aurora.gillis
 
-import io.fabric8.openshift.client.DefaultOpenShiftClient
-import io.fabric8.openshift.client.OpenShiftClient
-import io.netty.channel.ChannelOption
-import io.netty.handler.ssl.SslContextBuilder
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory
-import io.netty.handler.timeout.ReadTimeoutHandler
-import io.netty.handler.timeout.WriteTimeoutHandler
-import mu.KotlinLogging
-import no.skatteetaten.aurora.gillis.service.openshift.token.TokenProvider
+import java.util.concurrent.TimeUnit
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -20,10 +12,18 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
+import io.fabric8.openshift.client.DefaultOpenShiftClient
+import io.fabric8.openshift.client.OpenShiftClient
+import io.netty.channel.ChannelOption
+import io.netty.handler.ssl.SslContextBuilder
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory
+import io.netty.handler.timeout.ReadTimeoutHandler
+import io.netty.handler.timeout.WriteTimeoutHandler
+import mu.KotlinLogging
+import no.skatteetaten.aurora.gillis.service.openshift.token.TokenProvider
 import reactor.kotlin.core.publisher.toMono
 import reactor.netty.http.client.HttpClient
 import reactor.netty.tcp.SslProvider
-import java.util.concurrent.TimeUnit
 
 private val logger = KotlinLogging.logger {}
 

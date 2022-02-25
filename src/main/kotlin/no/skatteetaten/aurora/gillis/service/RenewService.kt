@@ -1,11 +1,11 @@
 package no.skatteetaten.aurora.gillis.service
 
-import no.skatteetaten.aurora.gillis.controller.handleError
-import no.skatteetaten.aurora.gillis.service.CrawlService.RenewableCertificate
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import mu.KotlinLogging
 import no.skatteetaten.aurora.gillis.controller.SourceSystemException
+import no.skatteetaten.aurora.gillis.controller.handleError
+import no.skatteetaten.aurora.gillis.service.CrawlService.RenewableCertificate
 import reactor.core.publisher.Mono
 
 data class Response(

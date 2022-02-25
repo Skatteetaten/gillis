@@ -1,13 +1,6 @@
 package no.skatteetaten.aurora.gillis.controller
 
-import com.ninjasquad.springmockk.MockkBean
-import io.mockk.coEvery
-import io.mockk.every
-import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
-import no.skatteetaten.aurora.gillis.controller.security.WebSecurityConfig
-import no.skatteetaten.aurora.gillis.service.CrawlService
-import no.skatteetaten.aurora.gillis.service.RenewService
-import no.skatteetaten.aurora.gillis.service.Response
+import java.time.Duration
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,9 +11,16 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
 import org.springframework.test.web.reactive.server.WebTestClient
-import reactor.kotlin.core.publisher.toMono
-import java.time.Duration
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.coEvery
+import io.mockk.every
+import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
+import no.skatteetaten.aurora.gillis.controller.security.WebSecurityConfig
+import no.skatteetaten.aurora.gillis.service.CrawlService
+import no.skatteetaten.aurora.gillis.service.RenewService
+import no.skatteetaten.aurora.gillis.service.Response
 import reactor.core.publisher.Flux
+import reactor.kotlin.core.publisher.toMono
 
 @WithMockUser
 @AutoConfigureRestDocs

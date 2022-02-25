@@ -1,15 +1,15 @@
 package no.skatteetaten.aurora.gillis.service
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
-import no.skatteetaten.aurora.mockmvc.extensions.mockwebserver.url
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import no.skatteetaten.aurora.gillis.RenewableCertificateBuilder
+import no.skatteetaten.aurora.mockmvc.extensions.mockwebserver.url
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import reactor.test.StepVerifier
 
 class RenewServiceTest {
