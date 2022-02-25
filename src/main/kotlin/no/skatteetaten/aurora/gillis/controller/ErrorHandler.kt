@@ -18,18 +18,18 @@ val logger: Logger = LoggerFactory.getLogger(ApplicationController::class.java)
 fun <T> Mono<T>.handleError(sourceSystem: String? = null) =
     this.switchIfEmpty(Mono.error(SourceSystemException("Empty response")))
         .doOnError {
-            if (it is WebClientResponseException) {
-                logError(
-                    SourceSystemException(
-                        message = "Error in response, status:${it.statusCode} message:${it.statusText}",
-                        cause = it,
-                        sourceSystem = sourceSystem,
-                        code = it.statusCode.name
-                    )
-                )
+            val ex = when (it) {
+                is WebClientResponseException -> getSourceExceptionForWebClientResponse(it, sourceSystem)
+                is SourceSystemException -> it
+                else -> SourceSystemException("Error response", it)
             }
-            logError(SourceSystemException("Error response", it))
+            logger.error("Could not renew cert message=${ex.message} statusCode=${ex.code}", ex)
         }
 
-fun logError(e: SourceSystemException) =
-    logger.error("Could not renew cert message=${e.message} statusCode=${e.code}", e)
+fun getSourceExceptionForWebClientResponse(ex: WebClientResponseException, sourceSystem: String?) =
+    SourceSystemException(
+        message = "Error in response, status:${ex.statusCode} message:${ex.statusText}",
+        cause = ex,
+        sourceSystem = sourceSystem,
+        code = ex.statusCode.name
+    )

@@ -52,7 +52,7 @@ class RenewServiceTest {
     }
 
     @Test
-    fun `Should log error when response has empty body`() {
+    fun `expect error when response has empty body`() {
         mockWebServer.enqueue(
             MockResponse()
                 .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -66,7 +66,7 @@ class RenewServiceTest {
     }
 
     @Test
-    fun `Should log error when response has success false`() {
+    fun `expect error when response has success false`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setBody(jacksonObjectMapper().writeValueAsString(Response(false, "Failed renewing certificate")))
@@ -76,8 +76,7 @@ class RenewServiceTest {
         val response = renewService.renew(RenewableCertificateBuilder().build())
         StepVerifier
             .create(response)
-            .expectNext(Response(false, "Failed renewing certificate"))
-            .expectComplete()
+            .expectErrorMessage("Failed renewing certificate")
             .verify()
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.security.web.server.authentication.HttpBasicServerAut
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.kotlin.core.publisher.toMono
 import java.time.Duration
+import reactor.core.publisher.Flux
 
 @WithMockUser
 @AutoConfigureRestDocs
@@ -47,7 +48,7 @@ class ApplicationControllerTest {
     @BeforeEach
     fun setUp() {
         val certificate = RenewableCertificateBuilder(ttl = Duration.ofSeconds(-10)).build()
-        every { crawlService.findRenewableCertificates(any()) } returns listOf(certificate)
+        every { crawlService.findRenewableCertificates(any()) } returns Flux.fromIterable(listOf(certificate))
     }
 
     @Test

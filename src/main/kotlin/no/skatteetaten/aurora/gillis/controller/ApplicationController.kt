@@ -8,24 +8,22 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
-import reactor.core.publisher.Mono
+import no.skatteetaten.aurora.gillis.service.Response
+import reactor.core.publisher.Flux
 
 @RestController
 @RequestMapping("/api/certificate")
 class ApplicationController(val crawler: CrawlService, val renewalService: RenewService) {
 
     @PostMapping("/renew")
-    fun renewExpiredCertificates(): Mono<Unit> {
-        val certs = crawler.findRenewableCertificates(Instant.now())
-        val certsToRenew = certs.filter { it.ttl.isNegative }
-        certsToRenew.forEach {
-            renewalService.renew(it)
-        }
-        return Mono.empty()
+    fun renewExpiredCertificates(): Flux<Response> {
+        return crawler.findRenewableCertificates(Instant.now())
+            .filter { it.ttl.isNegative }
+            .flatMap { renewalService.renew(it) }
     }
 
     @GetMapping
-    fun list(): List<RenewableCertificate> {
+    fun list(): Flux<RenewableCertificate> {
         return crawler.findRenewableCertificates(Instant.now())
     }
 }

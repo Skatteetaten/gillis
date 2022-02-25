@@ -19,6 +19,7 @@ dependencies {
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.1.5")
     testImplementation("com.github.fkorotkov:k8s-kotlin-dsl:3.0.1")
     implementation("io.projectreactor:reactor-tools")
+    implementation("no.skatteetaten.aurora.kubernetes:kubernetes-reactor-coroutines-client:1.3.26")
 
     /* explicit okhttp3 dependencies to force transitive */
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
