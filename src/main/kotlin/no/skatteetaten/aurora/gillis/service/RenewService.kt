@@ -23,13 +23,15 @@ class RenewService(val client: WebClient) {
             .bodyValue(renewableCertificate.payload)
             .retrieve()
             .bodyToMono(Response::class.java)
-            .map {
-                if (!it.success) throw SourceSystemException(
-                    message = it.message,
-                    code = "200",
-                    sourceSystem = "boober"
+            .flatMap {
+                if (!it.success) Mono.error(
+                    SourceSystemException(
+                        message = it.message,
+                        code = "200",
+                        sourceSystem = "boober"
+                    )
                 )
-                else it
+                else Mono.just(it)
             }
             .handleError(sourceSystem = "boober")
             .doOnSuccess {
