@@ -47,8 +47,10 @@ class ApplicationControllerTest {
 
     @BeforeEach
     fun setUp() {
-        val certificate = RenewableCertificateBuilder(ttl = Duration.ofSeconds(-10)).build()
-        every { crawlService.findRenewableCertificates(any()) } returns Flux.fromIterable(listOf(certificate))
+        val certificate1 = RenewableCertificateBuilder(ttl = Duration.ofSeconds(-10)).build()
+        val certificate2 = RenewableCertificateBuilder(ttl = Duration.ofSeconds(-5)).build()
+        val certificate3 = RenewableCertificateBuilder(ttl = Duration.ofSeconds(10)).build()
+        every { crawlService.findRenewableCertificates(any()) } returns Flux.fromIterable(listOf(certificate1, certificate2, certificate3))
     }
 
     @Test
@@ -64,11 +66,24 @@ class ApplicationControllerTest {
     }
 
     @Test
+    fun `Expired certificates`() {
+        webTestClient
+            .get().uri("/api/certificate/renew")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+            .jsonPath("$.length()").isEqualTo(2)
+            .jsonPath("$[0].name").isEqualTo("name")
+            .jsonPath("$[0].namespace").isEqualTo("namespace")
+    }
+
+    @Test
     fun `List certificates`() {
         webTestClient.get().uri("/api/certificate")
             .exchange()
             .expectStatus().isOk
             .expectBody()
+            .jsonPath("$.length()").isEqualTo(3)
             .jsonPath("$[0].name").isEqualTo("name")
             .jsonPath("$[0].namespace").isEqualTo("namespace")
     }

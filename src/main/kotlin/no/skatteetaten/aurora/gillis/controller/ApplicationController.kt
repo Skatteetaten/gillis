@@ -22,6 +22,12 @@ class ApplicationController(val crawler: CrawlService, val renewalService: Renew
             .flatMap { renewalService.renew(it) }
     }
 
+    @GetMapping("/renew")
+    fun expiredCertificates(): Flux<RenewableCertificate> {
+        return crawler.findRenewableCertificates(Instant.now())
+            .filter { it.ttl.isNegative }
+    }
+
     @GetMapping
     fun list(): Flux<RenewableCertificate> {
         return crawler.findRenewableCertificates(Instant.now())
