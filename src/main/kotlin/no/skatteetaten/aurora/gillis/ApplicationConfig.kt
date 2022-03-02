@@ -12,15 +12,13 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
-import io.fabric8.openshift.client.DefaultOpenShiftClient
-import io.fabric8.openshift.client.OpenShiftClient
 import io.netty.channel.ChannelOption
 import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory
 import io.netty.handler.timeout.ReadTimeoutHandler
 import io.netty.handler.timeout.WriteTimeoutHandler
 import mu.KotlinLogging
-import no.skatteetaten.aurora.gillis.service.openshift.token.TokenProvider
+import no.skatteetaten.aurora.kubernetes.config.kubernetesToken
 import reactor.kotlin.core.publisher.toMono
 import reactor.netty.http.client.HttpClient
 import reactor.netty.tcp.SslProvider
@@ -33,11 +31,6 @@ class ApplicationConfig(
     @Value("\${gillis.httpclient.writeTimeout:10000}") val writeTimeout: Long,
     @Value("\${gillis.httpclient.connectTimeout:5000}") val connectTimeout: Int
 ) {
-
-    @Bean
-    fun client(): OpenShiftClient {
-        return DefaultOpenShiftClient()
-    }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -55,12 +48,11 @@ class ApplicationConfig(
     fun createWebClient(
         @Value("\${spring.application.name}") applicationName: String,
         @Value("\${integrations.boober.url}") baseUrl: String,
-        tokenProvider: TokenProvider,
         builder: WebClient.Builder
     ): WebClient {
         logger.info { "Created webclient for base url=$baseUrl" }
         return builder.init()
-            .defaultHeader("Authorization", "Bearer ${tokenProvider.getToken()}")
+            .defaultHeader("Authorization", "Bearer ${kubernetesToken()}")
             .baseUrl(baseUrl)
             .build()
     }
