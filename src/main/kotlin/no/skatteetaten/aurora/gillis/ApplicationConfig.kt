@@ -48,11 +48,12 @@ class ApplicationConfig(
     fun createWebClient(
         @Value("\${spring.application.name}") applicationName: String,
         @Value("\${integrations.boober.url}") baseUrl: String,
+        @Value("\${gillis.openshift.tokenLocation}") tokenLocation: String,
         builder: WebClient.Builder
     ): WebClient {
         logger.info { "Created webclient for base url=$baseUrl" }
         return builder.init()
-            .defaultHeader("Authorization", "Bearer ${kubernetesToken()}")
+            .defaultHeader("Authorization", "Bearer ${kubernetesToken(tokenLocation)}")
             .baseUrl(baseUrl)
             .build()
     }
