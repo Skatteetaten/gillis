@@ -1,8 +1,8 @@
 package no.skatteetaten.aurora.gillis.extensions
 
+import java.time.Instant
 import io.fabric8.kubernetes.api.model.HasMetadata
 import io.fabric8.kubernetes.api.model.Secret
-import java.time.Instant
 
 const val RENEW_AFTER_LABEL = "stsRenewAfter"
 const val APP_ANNOTATION = "gillis.skatteetaten.no/app"
