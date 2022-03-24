@@ -35,6 +35,9 @@ integrations:
 spring:
     profiles: local
 
+kubernetes:
+    url: https://kubernetes.default.svc.cluster.local # specify cluster url
+
 gillis:
     username: gillis
     password: gillis
