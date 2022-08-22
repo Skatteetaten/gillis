@@ -10,6 +10,9 @@ aurora {
     useSpringBoot {
         useWebFlux
     }
+    versions {
+        javaSourceCompatibility = "17"
+    }
 }
 
 dependencies {
