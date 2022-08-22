@@ -34,9 +34,8 @@ dependencies {
 
     testImplementation("io.mockk:mockk:1.12.5")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-    testImplementation("no.skatteetaten.aurora:mockwebserver-extensions-kotlin:1.1.8") {
-        exclude(group = "no.skatteetaten.aurora.springboot", module = "aurora-spring-boot-mvc-starter")
-    }
+    testImplementation("no.skatteetaten.aurora:mockwebserver-extensions-kotlin:1.3.1")
+
     testImplementation("com.ninja-squad:springmockk:3.1.1")
     testImplementation("org.junit-pioneer:junit-pioneer:1.7.1")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
