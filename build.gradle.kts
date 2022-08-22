@@ -24,10 +24,6 @@ dependencies {
     implementation("io.projectreactor:reactor-tools")
     implementation("no.skatteetaten.aurora.kubernetes:kubernetes-reactor-coroutines-client:1.3.31")
 
-    /* explicit okhttp3 dependencies to force transitive */
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
-
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
