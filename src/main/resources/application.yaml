@@ -1,6 +1,8 @@
 spring:
     profiles:
         active: local
+    application:
+        name: gillis
 
     codec:
         max-in-memory-size: -1 # unlimited
