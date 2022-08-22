@@ -33,7 +33,9 @@ integrations:
         url: http://boober
 ---
 spring:
-    profiles: local
+    config:
+        activate:
+            on-profile: local
 
 kubernetes:
     url: https://kubernetes.default.svc.cluster.local # specify cluster url
