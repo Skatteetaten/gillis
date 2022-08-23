@@ -1,6 +1,8 @@
 spring:
     profiles:
         active: local
+    application:
+        name: gillis
 
     codec:
         max-in-memory-size: -1 # unlimited
@@ -33,7 +35,9 @@ integrations:
         url: http://boober
 ---
 spring:
-    profiles: local
+    config:
+        activate:
+            on-profile: local
 
 kubernetes:
     url: https://kubernetes.default.svc.cluster.local # specify cluster url
